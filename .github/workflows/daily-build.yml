@@ -1,0 +1,75 @@
+name: Daily build & deploy
+
+on:
+  schedule:
+    # SMRI refreshes ~16:00 JST; run at 08:00 UTC (17:00 JST).
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write # commit refreshed caches back
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # 1) Normalize SMRI data → bills.json/meta.json
+      - run: npm run data
+        env:
+          SESSION: '' # latest available
+
+      # 2) Fetch any new bills' outline text (cached files are skipped)
+      - run: npm run data:content
+
+      # 3) Summarize new/changed bills via Groq (skips silently if no key)
+      - run: npm run data:summaries
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GROQ_MODEL: llama-3.3-70b-versatile
+
+      # 4) Re-run build-data to fold fresh summaries into bills.json
+      - run: npm run data
+
+      # Persist the content/summary caches so cost stays near-zero
+      - name: Commit refreshed caches
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/content data/summaries.json
+          git diff --quiet --cached || git commit -m "chore: refresh bill data $(date -u +%F)"
+          git push || true
+
+      - uses: actions/configure-pages@v5
+        id: pages
+
+      - name: Build site
+        run: npm run build
+        env:
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build
+
+      - uses: actions/deploy-pages@v4
+        id: deploy

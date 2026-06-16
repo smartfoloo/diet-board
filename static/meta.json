@@ -1,0 +1,127 @@
+{
+  "session": 221,
+  "updatedAt": "2026-06-16",
+  "generatedAt": "2026-06-16T02:38:03.426Z",
+  "billCount": 85,
+  "categories": [
+    "税制",
+    "社会保障",
+    "外交・安全保障",
+    "経済・産業",
+    "労働",
+    "環境・エネルギー",
+    "教育・文化",
+    "司法・行政",
+    "農林水産",
+    "国土・交通",
+    "その他"
+  ],
+  "parties": [
+    {
+      "key": "cabinet",
+      "label": "内閣",
+      "color": "#6b6457"
+    },
+    {
+      "key": "ldp",
+      "label": "自由民主党",
+      "color": "#d6322e"
+    },
+    {
+      "key": "cdp",
+      "label": "立憲民主党",
+      "color": "#1b50a4"
+    },
+    {
+      "key": "komeito",
+      "label": "公明党",
+      "color": "#d4528f"
+    },
+    {
+      "key": "ishin",
+      "label": "日本維新の会",
+      "color": "#7bbf3f"
+    },
+    {
+      "key": "dpp",
+      "label": "国民民主党",
+      "color": "#e8b21f"
+    },
+    {
+      "key": "jcp",
+      "label": "日本共産党",
+      "color": "#c0322e"
+    },
+    {
+      "key": "reiwa",
+      "label": "れいわ新選組",
+      "color": "#b8367f"
+    },
+    {
+      "key": "sdp",
+      "label": "社会民主党",
+      "color": "#1aa0c8"
+    },
+    {
+      "key": "sanseito",
+      "label": "参政党",
+      "color": "#e3601f"
+    },
+    {
+      "key": "conservative",
+      "label": "日本保守党",
+      "color": "#1f3a6e"
+    },
+    {
+      "key": "mirai",
+      "label": "チームみらい",
+      "color": "#15b8a6"
+    },
+    {
+      "key": "chudo",
+      "label": "中道改革連合",
+      "color": "#5b6fb0"
+    },
+    {
+      "key": "yushi",
+      "label": "有志の会",
+      "color": "#8a7a5c"
+    },
+    {
+      "key": "chair",
+      "label": "委員長提出",
+      "color": "#7d7468"
+    },
+    {
+      "key": "other",
+      "label": "その他・無所属",
+      "color": "#9a9182"
+    }
+  ],
+  "heatThresholds": {
+    "提出": {
+      "warm": 11,
+      "hot": 21
+    },
+    "委員会審議": {
+      "warm": 11,
+      "hot": 21
+    },
+    "本会議": {
+      "warm": 11,
+      "hot": 21
+    },
+    "参議院": {
+      "warm": 35,
+      "hot": 69
+    },
+    "成立": {
+      "warm": 11,
+      "hot": 21
+    },
+    "廃案": {
+      "warm": 11,
+      "hot": 21
+    }
+  }
+}

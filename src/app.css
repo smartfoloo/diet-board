@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  @apply bg-canvas text-ink font-sans antialiased;
+  background-image:
+    radial-gradient(circle at 12% -10%, rgba(231, 196, 131, 0.16), transparent 42%),
+    radial-gradient(circle at 100% 0%, rgba(47, 111, 176, 0.06), transparent 38%);
+  background-attachment: fixed;
+}
+
+/* Thin, warm scrollbars to match the calm aesthetic */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #d6ccb6 transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #d6ccb6;
+  border-radius: 999px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@layer components {
+  .pill {
+    @apply inline-flex items-center gap-1.5 rounded-pill border border-line bg-surface px-3 py-1.5 text-sm text-ink-soft transition-colors;
+  }
+  .pill-active {
+    @apply border-accent/30 bg-accent-soft text-accent-deep;
+  }
+  .tag {
+    @apply inline-flex items-center rounded-pill px-2 py-0.5 text-[11px] font-medium leading-none;
+  }
+}
