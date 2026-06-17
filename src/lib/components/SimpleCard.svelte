@@ -12,9 +12,9 @@
 
   /** @type {Record<Tone, string>} */
   const dot = {
-    new: '#98a0ab',
-    active: '#2f6fb0',
-    done: '#4e9e6e',
+    new: '#98a2b3',
+    active: '#7f56d9',
+    done: '#17b26a',
     failed: '#b0b6bf'
   };
 

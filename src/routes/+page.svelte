@@ -2,6 +2,7 @@
   import { browser } from '$app/environment';
   import { COLUMNS } from '$lib/types';
   import FilterBar from '$lib/components/FilterBar.svelte';
+  import FilterMenu from '$lib/components/FilterMenu.svelte';
   import Column from '$lib/components/Column.svelte';
   import Feed from '$lib/components/Feed.svelte';
   import ActivityFeed from '$lib/components/ActivityFeed.svelte';
@@ -102,48 +103,27 @@
   <title>国会ビジュアライザー — 第{meta.session}回国会</title>
 </svelte:head>
 
-<FilterBar
-  {meta}
-  bind:filters
-  bind:view
-  bind:groupBy
-  {visibleParties}
-  total={bills.length}
-  shown={filtered.length}
-/>
+<FilterBar {meta} bind:view total={bills.length} shown={filtered.length} />
 
 {#if view === 'simple'}
-  <main class="mx-auto max-w-[1100px] px-4 py-6">
-    <!-- 国会 overview stats -->
+  <!-- Full-width hero -->
+  <div class="pt-[calc(56px+1.5rem)] px-4 sm:px-6 lg:px-8">
     <StatsHeader bills={bills} {meta} />
+  </div>
 
-    <!-- Friendly intro -->
-    <div class="mb-8 rounded-card border border-line bg-surface p-5 sm:p-6">
-      <h1 class="text-xl font-bold text-ink sm:text-2xl">いま国会で動いている法案</h1>
-      <p class="mt-2 text-sm leading-relaxed text-ink-soft">
-        国会では、新しいルール（法律）の案が日々話し合われています。このページでは、
-        その法案がいまどこまで進んでいるかを、やさしい言葉でまとめています。カードを押すと、
-        わかりやすい要約・くわしい内容・賛成反対の結果が見られます。
-      </p>
-      <p class="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-ink-faint">
-        <span class="font-medium text-ink-soft">法案の流れ:</span>
-        <span class="rounded-pill bg-canvas-deep px-2 py-0.5">① 提出される</span>
-        <span>→</span>
-        <span class="rounded-pill bg-accent-soft px-2 py-0.5 text-accent-deep">② 国会で議論・投票</span>
-        <span>→</span>
-        <span class="rounded-pill bg-success-soft px-2 py-0.5 text-success-ink">③ 成立して法律に</span>
-      </p>
-    </div>
-
+  <!-- Constrained bills section -->
+  <main class="mx-auto max-w-[1100px] px-4 pb-6 mt-10">
+    <FilterMenu {meta} bind:filters {view} bind:groupBy {visibleParties} />
     <Feed bills={filtered} {meta} {groupBy} onselect={select} />
   </main>
 {:else if view === 'recent'}
-  <main class="mx-auto max-w-[1100px] px-4 py-6">
+  <main class="mx-auto max-w-[1100px] px-4 pb-6 pt-[calc(56px+1.5rem)]">
     <ActivityFeed {bills} {meta} onselect={select} />
   </main>
 {:else}
-  <main class="mx-auto max-w-[1600px] px-4 py-4">
-    <div class="flex gap-3 overflow-x-auto pb-4" style="height: calc(100vh - 120px)">
+  <main class="mx-auto max-w-[1600px] px-4 pb-4 pt-[calc(56px+1rem)]">
+    <FilterMenu {meta} bind:filters {view} bind:groupBy {visibleParties} />
+    <div class="flex gap-3 overflow-x-auto pb-4" style="height: calc(100vh - 180px)">
       {#each COLUMNS as col (col.id)}
         <Column
           label={col.label}
