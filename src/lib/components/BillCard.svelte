@@ -1,8 +1,10 @@
-<script lang="ts">
-  import type { Bill } from '$lib/types';
+<script>
   import { partyColor, partyLabel } from '$lib/parties';
 
-  let { bill, onselect }: { bill: Bill; onselect: (b: Bill) => void } = $props();
+  /** @typedef {import('$lib/types.js').Bill} Bill */
+
+  /** @type {{ bill: Bill, onselect: (b: Bill, rect: DOMRect) => void }} */
+  let { bill, onselect } = $props();
 
   const heatClass = $derived(
     bill.heat === 'hot'
@@ -20,7 +22,7 @@
 
 <button
   type="button"
-  onclick={() => onselect(bill)}
+  onclick={(e) => onselect(bill, e.currentTarget.getBoundingClientRect())}
   class="group flex w-full shrink-0 flex-col gap-2 overflow-hidden rounded-card border p-3 text-left shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover {heatClass}"
 >
   <div class="flex items-start justify-between gap-2">
@@ -33,7 +35,7 @@
   </div>
 
   <h3 class="text-[13px] font-semibold leading-snug text-ink line-clamp-3 [overflow-wrap:anywhere]">
-    {bill.title}
+    {bill.ai?.plainTitle ?? bill.title}
   </h3>
 
   <div class="flex items-center justify-between gap-2 text-[11px] text-ink-faint">

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseJpDate, daysSince } from './jpdate';
+import { parseJpDate, daysSince } from './jpdate.js';
 
 describe('parseJpDate', () => {
   it('parses reiwa with padded spacing', () => {

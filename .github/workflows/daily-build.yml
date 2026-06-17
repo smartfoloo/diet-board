@@ -41,21 +41,25 @@ jobs:
       # 2) Fetch any new bills' outline text (cached files are skipped)
       - run: npm run data:content
 
-      # 3) Summarize new/changed bills via Groq (skips silently if no key)
-      - run: npm run data:summaries
-        env:
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          GROQ_MODEL: llama-3.3-70b-versatile
-
-      # 4) Re-run build-data to fold fresh summaries into bills.json
+      # 3) Rebuild with fresh outlines so AI hashes line up
       - run: npm run data
 
-      # Persist the content/summary caches so cost stays near-zero
+      # 4) Generate beginner explanations via Gemma (cached bills are skipped;
+      #    skips silently if no key). Free tier ≈ 1500 req/day covers a full session.
+      - run: npm run data:summaries
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemma-4-31b-it
+
+      # 5) Re-run build-data to fold fresh AI explanations into bills.json
+      - run: npm run data
+
+      # Persist the content/AI caches so cost stays near-zero
       - name: Commit refreshed caches
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/content data/summaries.json
+          git add data/content data/ai.json
           git diff --quiet --cached || git commit -m "chore: refresh bill data $(date -u +%F)"
           git push || true
 

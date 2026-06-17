@@ -1,13 +1,15 @@
 // Keyword-rule policy categorization. The Diet does not tag bills by policy area,
 // so we infer one from the bill title. Ordered: first matching category wins.
 
-export interface CategoryDef {
-  key: string;
-  label: string;
-  keywords: RegExp;
-}
+/**
+ * @typedef {object} CategoryDef
+ * @property {string} key
+ * @property {string} label
+ * @property {RegExp} keywords
+ */
 
-export const CATEGORIES: CategoryDef[] = [
+/** @type {CategoryDef[]} */
+export const CATEGORIES = [
   { key: 'tax', label: '税制', keywords: /税|租税|関税|印紙|徴収|たばこ税|酒税|消費税|所得税|法人税|地方税/ },
   {
     key: 'welfare',
@@ -50,13 +52,18 @@ export const CATEGORIES: CategoryDef[] = [
 
 export const DEFAULT_CATEGORY = { key: 'other', label: 'その他' };
 
-export function classify(title: string): string {
+/**
+ * @param {string} title
+ * @returns {string}
+ */
+export function classify(title) {
   for (const c of CATEGORIES) {
     if (c.keywords.test(title)) return c.label;
   }
   return DEFAULT_CATEGORY.label;
 }
 
-export function allCategoryLabels(): string[] {
+/** @returns {string[]} */
+export function allCategoryLabels() {
   return [...CATEGORIES.map((c) => c.label), DEFAULT_CATEGORY.label];
 }

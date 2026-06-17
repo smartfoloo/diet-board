@@ -1,20 +1,19 @@
-<script lang="ts">
-  import type { Bill, Stage } from '$lib/types';
+<script>
   import BillCard from './BillCard.svelte';
 
-  let {
-    label,
-    sub,
-    stage,
-    bills,
-    onselect
-  }: {
-    label: string;
-    sub?: string;
-    stage: Stage;
-    bills: Bill[];
-    onselect: (b: Bill) => void;
-  } = $props();
+  /** @typedef {import('$lib/types.js').Bill} Bill */
+  /** @typedef {import('$lib/types.js').Stage} Stage */
+
+  /**
+   * @type {{
+   *   label: string,
+   *   sub?: string,
+   *   stage: Stage,
+   *   bills: Bill[],
+   *   onselect: (b: Bill, rect: DOMRect) => void
+   * }}
+   */
+  let { label, sub, stage, bills, onselect } = $props();
 </script>
 
 <section class="flex h-full min-h-0 min-w-[260px] flex-1 flex-col">

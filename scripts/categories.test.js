@@ -1,8 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { classify } from './categories';
+import { classify } from './categories.js';
 
 describe('classify', () => {
-  const cases: [string, string][] = [
+  /** @type {[string, string][]} */
+  const cases = [
     ['所得税法等の一部を改正する法律案', '税制'],
     ['地方税法等の一部を改正する法律案', '税制'],
     ['介護保険法の一部を改正する法律案', '社会保障'],

@@ -2,7 +2,8 @@
 // HoR data uses era dates with irregular spacing, e.g. "令和 8年 3月13日", "平成10年 3月 4日".
 // HoC data already uses ISO ("2024-11-13"). Empty cells appear as "／" or "".
 
-const ERA_START: Record<string, number> = {
+/** @type {Record<string, number>} */
+const ERA_START = {
   令和: 2018, // 令和1 = 2019  → gregorian = 2018 + eraYear
   平成: 1988, // 平成1 = 1989
   昭和: 1925, // 昭和1 = 1926
@@ -12,15 +13,21 @@ const ERA_START: Record<string, number> = {
 
 const FULLWIDTH_DIGITS = '０１２３４５６７８９';
 
-function normalizeDigits(s: string): string {
+/**
+ * @param {string} s
+ * @returns {string}
+ */
+function normalizeDigits(s) {
   return s.replace(/[０-９]/g, (d) => String(FULLWIDTH_DIGITS.indexOf(d)));
 }
 
 /**
  * Parse a single date string to ISO (yyyy-mm-dd) or null.
  * Accepts both era format and ISO format. Ignores any trailing "／result".
+ * @param {string | undefined | null} raw
+ * @returns {string | null}
  */
-export function parseJpDate(raw: string | undefined | null): string | null {
+export function parseJpDate(raw) {
   if (!raw) return null;
   // Cells often look like "令和 8年 3月13日／可決" — take the part before the slash.
   let s = normalizeDigits(raw.split('／')[0].trim());
@@ -43,12 +50,21 @@ export function parseJpDate(raw: string | undefined | null): string | null {
   return null;
 }
 
-function pad(n: string | number): string {
+/**
+ * @param {string | number} n
+ * @returns {string}
+ */
+function pad(n) {
   return String(n).padStart(2, '0');
 }
 
-/** Whole days between an ISO date and a reference date (default today). */
-export function daysSince(isoDate: string | null, ref: Date = new Date()): number | null {
+/**
+ * Whole days between an ISO date and a reference date (default today).
+ * @param {string | null} isoDate
+ * @param {Date} [ref]
+ * @returns {number | null}
+ */
+export function daysSince(isoDate, ref = new Date()) {
   if (!isoDate) return null;
   const then = new Date(isoDate + 'T00:00:00Z');
   if (isNaN(then.getTime())) return null;

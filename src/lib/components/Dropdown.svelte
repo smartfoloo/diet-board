@@ -1,38 +1,41 @@
-<script lang="ts">
-  export interface Option {
-    value: string;
-    label: string;
-    color?: string;
-  }
+<script>
+  /** @typedef {{ value: string, label: string, color?: string }} Option */
 
+  /**
+   * @type {{
+   *   value: string,
+   *   options: Option[],
+   *   placeholder: string,
+   *   align?: 'left' | 'right',
+   *   label?: string
+   * }}
+   */
   let {
     value = $bindable(),
     options,
     placeholder,
     align = 'left',
     label
-  }: {
-    value: string;
-    options: Option[];
-    placeholder: string;
-    align?: 'left' | 'right';
-    label?: string;
   } = $props();
 
   let open = $state(false);
-  let root: HTMLDivElement;
+  /** @type {HTMLDivElement} */
+  let root;
 
   const current = $derived(options.find((o) => o.value === value));
 
-  function choose(v: string) {
+  /** @param {string} v */
+  function choose(v) {
     value = v;
     open = false;
   }
 
-  function onWindowClick(e: MouseEvent) {
-    if (open && root && !root.contains(e.target as Node)) open = false;
+  /** @param {MouseEvent} e */
+  function onWindowClick(e) {
+    if (open && root && !root.contains(/** @type {Node} */ (e.target))) open = false;
   }
-  function onKey(e: KeyboardEvent) {
+  /** @param {KeyboardEvent} e */
+  function onKey(e) {
     if (e.key === 'Escape') open = false;
   }
 </script>

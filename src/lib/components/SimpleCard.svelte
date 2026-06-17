@@ -1,0 +1,54 @@
+<script>
+  import { partyColor, partyLabel } from '$lib/parties';
+  import { simpleStatus } from '$lib/status';
+
+  /** @typedef {import('$lib/types.js').Bill} Bill */
+  /** @typedef {import('$lib/status.js').Tone} Tone */
+
+  /** @type {{ bill: Bill, onselect: (b: Bill, rect: DOMRect) => void }} */
+  let { bill, onselect } = $props();
+
+  const status = $derived(simpleStatus(bill));
+
+  /** @type {Record<Tone, string>} */
+  const dot = {
+    new: '#98a0ab',
+    active: '#2f6fb0',
+    done: '#4e9e6e',
+    failed: '#b0b6bf'
+  };
+
+  // Prefer the AI plain-language title; fall back to the official text.
+  const title = $derived(bill.ai?.plainTitle ?? bill.title);
+  const showOfficial = $derived(!!bill.ai?.plainTitle && bill.ai.plainTitle !== bill.title);
+</script>
+
+<button
+  type="button"
+  onclick={(e) => onselect(bill, e.currentTarget.getBoundingClientRect())}
+  class="flex w-full flex-col gap-3 rounded-card border border-line bg-surface p-4 text-left shadow-card transition-all hover:-translate-y-0.5 hover:shadow-card-hover sm:p-5"
+>
+  <div class="flex items-center justify-between gap-3">
+    <span class="flex items-center gap-1.5 text-xs text-ink-faint">
+      <span class="h-2 w-2 rounded-full" style="background:{partyColor(bill.submitterParty)}"></span>
+      {partyLabel(bill.submitterParty)}
+      <span class="text-ink-faint/50">·</span>
+      {bill.category}
+    </span>
+    <span class="flex shrink-0 items-center gap-1.5 text-xs font-medium text-ink-soft">
+      <span class="h-2 w-2 rounded-full" style="background:{dot[status.tone]}"></span>
+      {status.label}
+    </span>
+  </div>
+
+  <div>
+    <h3 class="text-[15px] font-bold leading-snug text-ink [overflow-wrap:anywhere]">
+      {title}
+    </h3>
+    {#if showOfficial}
+      <p class="mt-1 text-[11px] text-ink-faint [overflow-wrap:anywhere] line-clamp-1">
+        {bill.title}
+      </p>
+    {/if}
+  </div>
+</button>

@@ -5,7 +5,8 @@
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
-import type { Bill } from '../src/lib/types';
+
+/** @typedef {import('../src/lib/types.js').Bill} Bill */
 
 const ROOT = join(import.meta.dirname, '..');
 const CONTENT_DIR = join(ROOT, 'data', 'content');
@@ -14,9 +15,14 @@ const BILLS = join(ROOT, 'static', 'bills.json');
 const DELAY_MS = 700; // polite crawl
 const MAX_CHARS = 1800; // bound LLM token cost
 
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+/** @param {number} ms */
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-function htmlToText(html: string): string {
+/**
+ * @param {string} html
+ * @returns {string}
+ */
+function htmlToText(html) {
   return html
     .replace(/<script[\s\S]*?<\/script>/gi, '')
     .replace(/<style[\s\S]*?<\/style>/gi, '')
@@ -34,10 +40,15 @@ function htmlToText(html: string): string {
     .join('\n');
 }
 
-const FOOTER = /(ページの先頭|このページのトップ|議案審議情報一覧|Copyright|お問い合わせ|サイトマップ|関連リンク)/;
+const FOOTER =
+  /(議案要旨のPDF|議案等のファイル|提出法律案|成立法律|委員会の修正案|ページの先頭|このページのトップ|議案審議情報一覧|利用案内|著作権|免責事項|ご意見・ご質問|Copyright|All rights reserved|お問い合わせ|サイトマップ|関連リンク)/;
 
-/** Pull the 議案要旨 section out of a sangiin meisai page. */
-function extractYoushi(text: string): string | null {
+/**
+ * Pull the 議案要旨 section out of a sangiin meisai page.
+ * @param {string} text
+ * @returns {string | null}
+ */
+function extractYoushi(text) {
   const i = text.indexOf('議案要旨');
   if (i < 0) return null;
   let body = text.slice(i + '議案要旨'.length);
@@ -48,22 +59,36 @@ function extractYoushi(text: string): string | null {
   return body.length > 80 ? body.slice(0, MAX_CHARS) : null;
 }
 
-/** Take the substantive head of a shugiin 本文 page. */
-function extractHonbun(text: string): string | null {
-  const i = text.search(/(本文|提案理由|第一条|目次)/);
+/**
+ * Take the substantive head of a shugiin 本文 page.
+ * @param {string} text
+ * @returns {string | null}
+ */
+function extractHonbun(text) {
+  // Some shugiin URLs are a "本文情報一覧" index page (navigation, not the bill) — skip.
+  if (/本文情報一覧|照会できる情報の一覧/.test(text)) return null;
+  const i = text.search(/(提案理由|第一条|目次)/);
   const body = (i > 0 ? text.slice(i) : text).trim();
   return body.length > 80 ? body.slice(0, MAX_CHARS) : null;
 }
 
-/** Normalize a charset label to one TextDecoder understands. */
-function normalizeCharset(label: string | undefined): string {
+/**
+ * Normalize a charset label to one TextDecoder understands.
+ * @param {string | undefined} label
+ * @returns {string}
+ */
+function normalizeCharset(label) {
   const c = (label ?? '').toLowerCase().trim();
   if (/shift_?jis|sjis|x-sjis|windows-31j|ms_kanji/.test(c)) return 'shift_jis';
   if (/euc-?jp/.test(c)) return 'euc-jp';
   return 'utf-8';
 }
 
-async function fetchText(url: string): Promise<string | null> {
+/**
+ * @param {string} url
+ * @returns {Promise<string | null>}
+ */
+async function fetchText(url) {
   try {
     const res = await fetch(url, { headers: { 'User-Agent': 'kokkai-visu/0.1 (research)' } });
     if (!res.ok) return null;
@@ -81,7 +106,11 @@ async function fetchText(url: string): Promise<string | null> {
   }
 }
 
-async function contentFor(bill: Bill): Promise<string | null> {
+/**
+ * @param {Bill} bill
+ * @returns {Promise<string | null>}
+ */
+async function contentFor(bill) {
   if (bill.links.detail) {
     const html = await fetchText(bill.links.detail);
     if (html) {
@@ -98,7 +127,8 @@ async function contentFor(bill: Bill): Promise<string | null> {
 }
 
 async function main() {
-  const bills: Bill[] = JSON.parse(readFileSync(BILLS, 'utf8'));
+  /** @type {Bill[]} */
+  const bills = JSON.parse(readFileSync(BILLS, 'utf8'));
   mkdirSync(CONTENT_DIR, { recursive: true });
 
   let fetched = 0;

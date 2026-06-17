@@ -2,15 +2,17 @@
 // Faction names in the data carry suffixes like 「・無所属」「・無所属クラブ」「・無所属の会」.
 // We normalize to a canonical key and assign a stable color.
 
-export interface PartyDef {
-  key: string;
-  label: string;
-  color: string;
-  match: RegExp;
-}
+/**
+ * @typedef {object} PartyDef
+ * @property {string} key
+ * @property {string} label
+ * @property {string} color
+ * @property {RegExp} match
+ */
 
 // Order matters: first match wins.
-export const PARTIES: PartyDef[] = [
+/** @type {PartyDef[]} */
+export const PARTIES = [
   { key: 'cabinet', label: '内閣', color: '#6b6457', match: /内閣/ },
   { key: 'ldp', label: '自由民主党', color: '#d6322e', match: /自由民主党|自民/ },
   { key: 'cdp', label: '立憲民主党', color: '#1b50a4', match: /立憲民主党|立憲/ },
@@ -28,10 +30,15 @@ export const PARTIES: PartyDef[] = [
   { key: 'chair', label: '委員長提出', color: '#7d7468', match: /委員長|議院運営/ }
 ];
 
-const OTHER: PartyDef = { key: 'other', label: 'その他・無所属', color: '#9a9182', match: /.*/ };
+/** @type {PartyDef} */
+const OTHER = { key: 'other', label: 'その他・無所属', color: '#9a9182', match: /.*/ };
 
-/** Split a raw faction cell (semicolon-separated) into trimmed names. */
-export function splitFactions(raw: string | undefined | null): string[] {
+/**
+ * Split a raw faction cell (semicolon-separated) into trimmed names.
+ * @param {string | undefined | null} raw
+ * @returns {string[]}
+ */
+export function splitFactions(raw) {
   if (!raw) return [];
   return raw
     .split(/[;；]/)
@@ -39,29 +46,46 @@ export function splitFactions(raw: string | undefined | null): string[] {
     .filter(Boolean);
 }
 
-export function partyFor(name: string): PartyDef {
+/**
+ * @param {string} name
+ * @returns {PartyDef}
+ */
+export function partyFor(name) {
   for (const p of PARTIES) if (p.match.test(name)) return p;
   return OTHER;
 }
 
-/** Canonical key for the primary (first) submitting faction. */
-export function primaryPartyKey(factions: string[]): string | null {
+/**
+ * Canonical key for the primary (first) submitting faction.
+ * @param {string[]} factions
+ * @returns {string | null}
+ */
+export function primaryPartyKey(factions) {
   if (!factions.length) return null;
   return partyFor(factions[0]).key;
 }
 
-export function partyColor(key: string | null): string {
+/**
+ * @param {string | null} key
+ * @returns {string}
+ */
+export function partyColor(key) {
   if (!key) return OTHER.color;
   const p = PARTIES.find((x) => x.key === key);
   return p ? p.color : OTHER.color;
 }
 
-export function partyLabel(key: string | null): string {
+/**
+ * @param {string | null} key
+ * @returns {string}
+ */
+export function partyLabel(key) {
   if (!key) return OTHER.label;
   const p = PARTIES.find((x) => x.key === key);
   return p ? p.label : OTHER.label;
 }
 
-export function allPartyDefs(): PartyDef[] {
+/** @returns {PartyDef[]} */
+export function allPartyDefs() {
   return [...PARTIES, OTHER];
 }
