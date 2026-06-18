@@ -1,0 +1,22 @@
+# Caddy site block for the static build (adapter-static output in ./build).
+# You already run Caddy with other projects, so just paste this block into your
+# existing /etc/caddy/Caddyfile (alongside your other sites) and `systemctl reload caddy`.
+# Caddy provisions + renews HTTPS automatically — no certbot needed.
+
+your-domain.example {
+	root * /srv/kokkai-visu/build
+	encode gzip zstd
+
+	# SvelteKit adapter-static is built with fallback: 'index.html', so unknown
+	# client-side routes fall back to the SPA entry point.
+	try_files {path} {path}/ /index.html
+	file_server
+
+	# Data files refresh ~daily — keep them only briefly cacheable.
+	@json path *.json
+	header @json Cache-Control "public, max-age=300"
+
+	# Hashed JS/CSS assets are immutable — cache them hard.
+	@assets path /_app/*
+	header @assets Cache-Control "public, max-age=31536000, immutable"
+}
