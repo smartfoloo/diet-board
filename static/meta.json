@@ -1,8 +1,8 @@
 {
   "session": 221,
   "sessionType": "常会",
-  "updatedAt": "2026-06-18",
-  "generatedAt": "2026-06-18T13:50:24.943Z",
+  "updatedAt": "2026-06-19",
+  "generatedAt": "2026-06-19T11:50:15.121Z",
   "billCount": 89,
   "categories": [
     "税制",
@@ -113,8 +113,8 @@
       "hot": 21
     },
     "参議院": {
-      "warm": 26,
-      "hot": 51
+      "warm": 36,
+      "hot": 72
     },
     "成立": {
       "warm": 11,
