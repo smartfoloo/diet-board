@@ -31,16 +31,33 @@ const BADGES = [
 ];
 
 /**
- * Group every dated timeline event across all bills into a newest-first activity log.
+ * ISO date `days` before the given reference date (yyyy-mm-dd in, yyyy-mm-dd out).
+ * @param {string} iso
+ * @param {number} days
+ * @returns {string}
+ */
+function isoDaysBefore(iso, days) {
+  const d = new Date(iso + 'T00:00:00Z');
+  d.setUTCDate(d.getUTCDate() - days);
+  return d.toISOString().slice(0, 10);
+}
+
+/**
+ * Group recent dated timeline events across all bills into a newest-first activity log,
+ * limited to the past 7 days relative to `asOf` (the data's freshness date, not the
+ * viewer's clock — so a cached or long-open page stays consistent with the build).
  * @param {Bill[]} bills
+ * @param {string} [asOf] ISO yyyy-mm-dd; defaults to today. Events strictly older than 7 days are dropped.
  * @returns {ActivityDay[]}
  */
-export function recentActivity(bills) {
+export function recentActivity(bills, asOf = new Date().toISOString().slice(0, 10)) {
+  // Inclusive 7-day window: keep events dated on or after (asOf - 6 days).
+  const cutoff = isoDaysBefore(asOf, 6);
   /** @type {Map<string, ActivityEvent[]>} */
   const byDate = new Map();
   for (const bill of bills) {
     for (const e of bill.timeline) {
-      if (!e.date) continue;
+      if (!e.date || e.date < cutoff) continue;
       const badge = BADGES.find((b) => b.match.test(e.label));
       if (!badge) continue;
       /** @type {ActivityEvent} */

@@ -10,7 +10,7 @@
   /** @type {{ bills: Bill[], meta: Meta, onselect: (b: Bill, rect: DOMRect) => void }} */
   let { bills, meta, onselect } = $props();
 
-  const days = $derived(recentActivity(bills));
+  const days = $derived(recentActivity(bills, meta.updatedAt));
 
   /** @type {Record<Tone, string>} */
   const dot = { new: '#98a2b3', active: '#7f56d9', done: '#17b26a', failed: '#b0b6bf' };
