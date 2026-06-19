@@ -142,7 +142,7 @@ function normalizeCharset(label) {
  */
 async function fetchText(url) {
   try {
-    const res = await fetch(url, { headers: { 'User-Agent': 'kokkai-visu/0.1 (research)' } });
+    const res = await fetch(url, { headers: { 'User-Agent': 'diet-board/0.1 (research)' } });
     if (!res.ok) return null;
     const buf = await res.arrayBuffer();
     // sangiin meisai pages are UTF-8; shugiin 本文 pages are Shift_JIS. Detect from

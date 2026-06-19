@@ -69,7 +69,7 @@ async function deliberationFor(bill) {
   let json;
   try {
     const res = await fetch(`${API}?${params}`, {
-      headers: { 'User-Agent': 'kokkai-visu/0.1 (research)' }
+      headers: { 'User-Agent': 'diet-board/0.1 (research)' }
     });
     if (!res.ok) return empty;
     json = await res.json();

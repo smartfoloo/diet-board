@@ -9,7 +9,7 @@
 # Requirements on the server: git, Node 22 + npm (matches the CI runner).
 set -euo pipefail
 
-REPO="${REPO:-/srv/kokkai-visu}"   # where the repo is checked out
+REPO="${REPO:-/srv/diet-board}"   # where the repo is checked out
 BRANCH="${BRANCH:-main}"
 
 cd "$REPO"

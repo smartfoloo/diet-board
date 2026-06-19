@@ -4,7 +4,7 @@
 # Caddy provisions + renews HTTPS automatically — no certbot needed.
 
 your-domain.example {
-	root * /srv/kokkai-visu/build
+	root * /srv/diet-board/build
 	encode gzip zstd
 
 	# SvelteKit adapter-static is built with fallback: 'index.html', so unknown
