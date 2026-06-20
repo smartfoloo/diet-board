@@ -13,7 +13,7 @@
   const days = $derived(recentActivity(bills, meta.updatedAt));
 
   /** @type {Record<Tone, string>} */
-  const dot = { new: '#98a2b3', active: '#7f56d9', done: '#17b26a', failed: '#b0b6bf' };
+  const dot = { new: '#a1a1aa', active: '#0d9488', done: '#16a34a', failed: '#71717a' };
 
   // Highlight events newer than the user's last visit, then record this visit.
   const LAST_SEEN_KEY = 'kokkai:lastSeen';

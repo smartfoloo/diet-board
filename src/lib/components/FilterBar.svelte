@@ -1,4 +1,6 @@
 <script>
+  import ThemeToggle from '$lib/components/ThemeToggle.svelte';
+
   /** @typedef {import('$lib/types.js').Meta} Meta */
 
   /**
@@ -29,7 +31,7 @@
         type="button"
         onclick={() => (view = 'simple')}
         class="rounded-pill px-3 py-1 transition-colors {view === 'simple'
-          ? 'bg-accent text-white'
+          ? 'bg-accent text-on-accent'
           : 'text-ink-soft hover:text-ink'}"
       >
         まとめ
@@ -38,7 +40,7 @@
         type="button"
         onclick={() => (view = 'board')}
         class="rounded-pill px-3 py-1 transition-colors {view === 'board'
-          ? 'bg-accent text-white'
+          ? 'bg-accent text-on-accent'
           : 'text-ink-soft hover:text-ink'}"
       >
         ボード
@@ -47,15 +49,18 @@
         type="button"
         onclick={() => (view = 'recent')}
         class="rounded-pill px-3 py-1 transition-colors {view === 'recent'
-          ? 'bg-accent text-white'
+          ? 'bg-accent text-on-accent'
           : 'text-ink-soft hover:text-ink'}"
       >
         動き
       </button>
     </div>
 
-    <span class="ml-auto text-xs text-ink-faint tabular-nums">
-      {shown} / {total} 件
-    </span>
+    <div class="ml-auto flex items-center gap-2.5">
+      <span class="text-xs text-ink-faint tabular-nums">
+        {shown} / {total} 件
+      </span>
+      <ThemeToggle />
+    </div>
   </div>
 </div>

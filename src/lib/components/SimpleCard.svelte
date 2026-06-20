@@ -12,10 +12,10 @@
 
   /** @type {Record<Tone, string>} */
   const dot = {
-    new: '#98a2b3',
-    active: '#7f56d9',
-    done: '#17b26a',
-    failed: '#b0b6bf'
+    new: '#a1a1aa',
+    active: '#0d9488',
+    done: '#16a34a',
+    failed: '#71717a'
   };
 
   // Prefer the AI plain-language title; fall back to the official text.

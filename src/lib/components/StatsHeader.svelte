@@ -19,10 +19,10 @@
   const passRate = $derived(total ? Math.round((counts.done / total) * 100) : 0);
 
   const stats = $derived([
-    { label: '提出', value: counts.new, dot: '#98a2b3' },
-    { label: '審議中', value: counts.active, dot: '#7f56d9' },
-    { label: '成立', value: counts.done, dot: '#17b26a' },
-    { label: '廃案', value: counts.failed, dot: '#b0b6bf' }
+    { label: '提出', value: counts.new, dot: '#a1a1aa' },
+    { label: '審議中', value: counts.active, dot: '#0d9488' },
+    { label: '成立', value: counts.done, dot: '#16a34a' },
+    { label: '廃案', value: counts.failed, dot: '#71717a' }
   ]);
 </script>
 

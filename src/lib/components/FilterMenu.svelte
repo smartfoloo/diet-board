@@ -95,7 +95,7 @@
           type="button"
           onclick={() => (groupBy = 'status')}
           class="rounded-pill px-2.5 py-1 transition-colors {groupBy === 'status'
-            ? 'bg-accent text-white'
+            ? 'bg-accent text-on-accent'
             : 'text-ink-soft hover:text-ink'}"
         >
           状況
@@ -104,7 +104,7 @@
           type="button"
           onclick={() => (groupBy = 'category')}
           class="rounded-pill px-2.5 py-1 transition-colors {groupBy === 'category'
-            ? 'bg-accent text-white'
+            ? 'bg-accent text-on-accent'
             : 'text-ink-soft hover:text-ink'}"
         >
           テーマ

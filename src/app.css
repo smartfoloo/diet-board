@@ -2,8 +2,90 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Design tokens taken verbatim from the Chakra UI v3 source
+ * (chakra-ui/chakra-ui · theme/tokens + theme/semantic-tokens):
+ *   gray  = Chakra zinc scale         teal = Chakra brand colorPalette
+ *   bg / fg / border = Chakra semantic tokens (_light / _dark)
+ * Values are space-separated RGB channels so Tailwind opacity modifiers work
+ * via rgb(var(--token) / <alpha>). The `.dark` block flips every token at once.
+ */
 :root {
   color-scheme: light;
+
+  /* Surfaces — Chakra bg.* (_light) */
+  --canvas: 255 255 255; /* bg            → white */
+  --canvas-deep: 250 250 250; /* bg.subtle     → gray.50  #fafafa */
+  --surface: 255 255 255; /* bg.panel      → white */
+  --surface-2: 244 244 245; /* bg.muted      → gray.100 #f4f4f5 */
+  --line: 228 228 231; /* border        → gray.200 #e4e4e7 */
+  --line-strong: 212 212 216; /* border.empha. → gray.300 #d4d4d8 */
+
+  /* Text — Chakra fg.* (_light) */
+  --ink: 0 0 0; /* fg            → black */
+  --ink-soft: 82 82 91; /* fg.muted      → gray.600 #52525b */
+  --ink-faint: 161 161 170; /* fg.subtle     → gray.400 #a1a1aa */
+
+  /* Brand accent — Chakra teal colorPalette (_light) */
+  --accent: 13 148 136; /* teal.solid    → teal.600 #0d9488 */
+  --accent-soft: 204 251 241; /* teal.subtle   → teal.100 #ccfbf1 */
+  --accent-deep: 12 93 86; /* teal.fg       → teal.700 #0c5d56 */
+  --on-accent: 255 255 255; /* teal.contrast → white */
+
+  /* Warning — Chakra yellow (_light) */
+  --amber: 234 179 8; /* yellow.500 #eab308 */
+  --amber-soft: 254 249 195; /* yellow.100 #fef9c3 */
+  --amber-ink: 132 82 9; /* yellow.700 #845209 */
+
+  /* Success 成立 — Chakra green (_light) */
+  --success: 22 163 74; /* green.600 #16a34a */
+  --success-soft: 220 252 231; /* green.100 #dcfce7 */
+  --success-ink: 17 105 50; /* green.700 #116932 */
+
+  /* Heat tints — Chakra orange (_light) */
+  --heat-warm: 255 247 237; /* orange.50  #fff7ed */
+  --heat-hot: 255 237 213; /* orange.100 #ffedd5 */
+
+  --scrollbar-thumb: #d4d4d8; /* gray.300 */
+}
+
+.dark {
+  color-scheme: dark;
+
+  /* Surfaces — Chakra bg.* (_dark) */
+  --canvas: 0 0 0; /* bg            → black */
+  --canvas-deep: 17 17 17; /* bg.subtle     → gray.950 #111111 */
+  --surface: 17 17 17; /* bg.panel      → gray.950 #111111 */
+  --surface-2: 24 24 27; /* bg.muted      → gray.900 #18181b */
+  --line: 39 39 42; /* border        → gray.800 #27272a */
+  --line-strong: 63 63 70; /* border.empha. → gray.700 #3f3f46 */
+
+  /* Text — Chakra fg.* (_dark) */
+  --ink: 250 250 250; /* fg            → gray.50  #fafafa */
+  --ink-soft: 161 161 170; /* fg.muted      → gray.400 #a1a1aa */
+  --ink-faint: 113 113 122; /* fg.subtle     → gray.500 #71717a */
+
+  /* Brand accent — Chakra teal colorPalette (_dark) */
+  --accent: 13 148 136; /* teal.solid    → teal.600 #0d9488 */
+  --accent-soft: 3 39 38; /* teal.subtle   → teal.900 #032726 */
+  --accent-deep: 94 234 212; /* teal.fg       → teal.300 #5eead4 */
+  --on-accent: 255 255 255; /* teal.contrast → white */
+
+  /* Warning — Chakra yellow (_dark) */
+  --amber: 250 204 21; /* yellow.400 #facc15 */
+  --amber-soft: 66 32 6; /* yellow.900 #422006 */
+  --amber-ink: 253 224 71; /* yellow.300 #fde047 */
+
+  /* Success 成立 — Chakra green (_dark) */
+  --success: 34 197 94; /* green.500 #22c55e */
+  --success-soft: 4 39 19; /* green.900 #042713 */
+  --success-ink: 134 239 172; /* green.300 #86efac */
+
+  /* Heat tints — Chakra orange (_dark) */
+  --heat-warm: 34 10 4; /* orange.950 #220a04 */
+  --heat-hot: 59 17 6; /* orange.900 #3b1106 */
+
+  --scrollbar-thumb: #3f3f46; /* gray.700 */
 }
 
 html,
@@ -12,22 +94,22 @@ body {
 }
 
 body {
+  /* Chakra uses a flat canvas — no decorative gradient */
   @apply bg-canvas text-ink font-sans antialiased;
-  background-image: radial-gradient(circle at 100% 0%, rgba(127, 86, 217, 0.04), transparent 38%);
-  background-attachment: fixed;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 /* Thin, neutral scrollbars to match the clean aesthetic */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #d3d7dd transparent;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
 }
 *::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 *::-webkit-scrollbar-thumb {
-  background: #d3d7dd;
+  background: var(--scrollbar-thumb);
   border-radius: 999px;
 }
 *::-webkit-scrollbar-track {

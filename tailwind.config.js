@@ -1,56 +1,72 @@
 /** @type {import('tailwindcss').Config} */
+
+// Semantic colors are driven by CSS custom properties (see src/app.css) holding
+// space-separated RGB channels, so Tailwind opacity modifiers (e.g. bg-accent/60)
+// keep working AND every token flips automatically under the `.dark` class.
+const token = (name) => `rgb(var(--${name}) / <alpha-value>)`;
+
 export default {
+  darkMode: 'class',
   content: ['./src/**/*.{html,js,svelte}'],
   theme: {
     extend: {
       colors: {
-        // Clean white canvas + surfaces (Untitled UI gray scale)
-        canvas: '#ffffff',
-        'canvas-deep': '#f9fafb',
-        surface: '#ffffff',
-        'surface-2': '#f9fafb',
-        line: '#eaecf0',
-        'line-strong': '#d0d5dd',
-        // Neutral slate text (gray-900 / gray-600 / gray-500)
-        ink: '#101828',
-        'ink-soft': '#475467',
-        'ink-faint': '#667085',
-        // Interactive / brand accent (Untitled UI violet)
-        accent: '#7f56d9',
-        'accent-soft': '#f4ebff',
-        'accent-deep': '#6941c6',
+        // Canvas + surfaces (Chakra UI gray/zinc scale)
+        canvas: token('canvas'),
+        'canvas-deep': token('canvas-deep'),
+        surface: token('surface'),
+        'surface-2': token('surface-2'),
+        line: token('line'),
+        'line-strong': token('line-strong'),
+        // Foreground text (Chakra fg / fg.muted / fg.subtle)
+        ink: token('ink'),
+        'ink-soft': token('ink-soft'),
+        'ink-faint': token('ink-faint'),
+        // Interactive / brand accent (Chakra teal)
+        accent: token('accent'),
+        'accent-soft': token('accent-soft'),
+        'accent-deep': token('accent-deep'),
+        'on-accent': token('on-accent'),
         // Amber callout
-        amber: '#e7c483',
-        'amber-soft': '#fbf2dd',
-        'amber-ink': '#8a6a32',
-        // Success green (成立) — Untitled UI green
-        success: '#17b26a',
-        'success-soft': '#dcfae6',
-        'success-ink': '#067647',
+        amber: token('amber'),
+        'amber-soft': token('amber-soft'),
+        'amber-ink': token('amber-ink'),
+        // Success green (成立)
+        success: token('success'),
+        'success-soft': token('success-soft'),
+        'success-ink': token('success-ink'),
         // Heat tints (cards sitting too long)
-        'heat-warm': '#fbf1e3',
-        'heat-hot': '#fbe4d8'
+        'heat-warm': token('heat-warm'),
+        'heat-hot': token('heat-hot')
       },
       fontFamily: {
+        // Chakra v3 body/heading font is Inter; JP fonts inserted for this app,
+        // then Chakra's exact fallback stack.
         sans: [
           'Inter',
           '"Hiragino Kaku Gothic ProN"',
           '"Noto Sans JP"',
-          'system-ui',
+          '-apple-system',
+          'BlinkMacSystemFont',
           '"Segoe UI"',
-          'Roboto',
-          'sans-serif'
+          'Helvetica',
+          'Arial',
+          'sans-serif',
+          '"Apple Color Emoji"',
+          '"Segoe UI Emoji"',
+          '"Segoe UI Symbol"'
         ]
       },
       borderRadius: {
-        card: '12px',
-        pill: '999px'
+        // Chakra Card recipe → borderRadius: "l3" = radii.md = 0.375rem
+        card: '0.375rem',
+        pill: '9999px'
       },
       boxShadow: {
-        // Untitled UI "shadow-xs / shadow-sm" — subtle, paired with a hairline border
-        card: '0 1px 2px 0 rgba(16,24,40,0.06), 0 1px 3px 0 rgba(16,24,40,0.10)',
-        'card-hover': '0 2px 4px -2px rgba(16,24,40,0.06), 0 12px 16px -4px rgba(16,24,40,0.08)',
-        drawer: '0 8px 8px -4px rgba(16,24,40,0.04), 0 20px 24px -4px rgba(16,24,40,0.10)'
+        // Chakra semantic shadows (gray.900 = #18181b = rgb(24 24 27))
+        card: '0px 1px 2px rgba(24,24,27,0.10), 0px 0px 1px rgba(24,24,27,0.20)', // xs
+        'card-hover': '0px 4px 8px rgba(24,24,27,0.10), 0px 0px 1px rgba(24,24,27,0.30)', // md
+        drawer: '0px 8px 16px rgba(24,24,27,0.10), 0px 0px 1px rgba(24,24,27,0.30)' // lg
       }
     }
   },
