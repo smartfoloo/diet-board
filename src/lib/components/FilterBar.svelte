@@ -1,6 +1,7 @@
 <script>
   import ThemeToggle from '$lib/components/ThemeToggle.svelte';
   import TranslateMenu from '$lib/components/TranslateMenu.svelte';
+  import SegmentedTabs from '$lib/components/SegmentedTabs.svelte';
 
   /** @typedef {import('$lib/types.js').Meta} Meta */
 
@@ -13,54 +14,37 @@
    * }}
    */
   let { meta, view = $bindable(), total, shown } = $props();
+
+  const viewTabs = [
+    { value: 'simple', label: 'まとめ' },
+    { value: 'board', label: 'ボード' },
+    { value: 'recent', label: '動き' }
+  ];
 </script>
 
-<div
-  class="fixed inset-x-0 top-0 z-20 border-b border-line bg-canvas/85 backdrop-blur supports-[backdrop-filter]:bg-canvas/70"
->
-  <div class="mx-auto flex max-w-[1600px] flex-wrap items-center gap-2 px-4 py-2.5">
-    <div class="mr-1 flex items-baseline gap-2">
+<!-- Floating pill toolbar -->
+<div class="fixed inset-x-0 top-0 z-20 px-3">
+  <div
+    class="mx-auto mt-2.5 flex max-w-[1100px] items-center gap-2 rounded-pill border border-line bg-surface/85 px-2.5 py-1.5 shadow-card-hover backdrop-blur supports-[backdrop-filter]:bg-surface/70 sm:gap-3 sm:px-3.5"
+  >
+    <!-- Brand -->
+    <div class="hidden items-baseline gap-2 sm:flex">
       <span class="text-sm font-bold tracking-tight text-ink">国会ビジュアライザー</span>
       <span class="rounded-pill bg-accent-soft px-2 py-0.5 text-[11px] font-medium text-accent-deep">
         第{meta.session}回国会
       </span>
     </div>
 
-    <!-- View toggle (primary) -->
-    <div class="flex rounded-pill border border-line bg-surface p-0.5 text-sm">
-      <button
-        type="button"
-        onclick={() => (view = 'simple')}
-        class="rounded-pill px-3 py-1 transition-colors {view === 'simple'
-          ? 'bg-accent text-on-accent'
-          : 'text-ink-soft hover:text-ink'}"
-      >
-        まとめ
-      </button>
-      <button
-        type="button"
-        onclick={() => (view = 'board')}
-        class="rounded-pill px-3 py-1 transition-colors {view === 'board'
-          ? 'bg-accent text-on-accent'
-          : 'text-ink-soft hover:text-ink'}"
-      >
-        ボード
-      </button>
-      <button
-        type="button"
-        onclick={() => (view = 'recent')}
-        class="rounded-pill px-3 py-1 transition-colors {view === 'recent'
-          ? 'bg-accent text-on-accent'
-          : 'text-ink-soft hover:text-ink'}"
-      >
-        動き
-      </button>
-    </div>
+    <span class="hidden h-5 w-px bg-line sm:block" aria-hidden="true"></span>
 
-    <div class="ml-auto flex items-center gap-2.5">
-      <span class="text-xs text-ink-faint tabular-nums notranslate">
+    <!-- View tabs (primary) -->
+    <SegmentedTabs bind:value={view} options={viewTabs} ariaLabel="表示切り替え" />
+
+    <div class="ml-auto flex items-center gap-2 sm:gap-2.5">
+      <span class="hidden text-xs text-ink-faint tabular-nums notranslate sm:inline">
         {shown} / {total} 件
       </span>
+      <span class="hidden h-5 w-px bg-line sm:block" aria-hidden="true"></span>
       <TranslateMenu />
       <ThemeToggle />
     </div>

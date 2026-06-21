@@ -49,6 +49,13 @@
   /** @param {string} lang */
   function choose(lang) {
     open = false;
+    // A manual choice permanently disables device auto-detection (see app.html),
+    // so reverting to Japanese (which clears the cookie) is never re-overridden.
+    try {
+      localStorage.setItem('lang-autodetected', '1');
+    } catch (e) {
+      /* ignore */
+    }
     if (lang === current) return;
     current = lang;
 
@@ -94,7 +101,7 @@
     aria-label="言語を変更 / Change language"
     title={currentLabel}
     onclick={() => (open = !open)}
-    class="inline-flex h-7 w-7 items-center justify-center rounded-pill transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 {open
+    class="inline-flex h-8 w-8 items-center justify-center rounded-pill transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 {open
       ? 'bg-surface-2 text-ink'
       : current !== 'ja'
         ? 'bg-transparent text-accent-deep hover:bg-surface-2'

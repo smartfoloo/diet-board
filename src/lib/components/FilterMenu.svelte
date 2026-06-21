@@ -1,6 +1,7 @@
 <script>
   import { COLUMNS } from '$lib/types';
   import Dropdown from './Dropdown.svelte';
+  import SegmentedTabs from './SegmentedTabs.svelte';
 
   /** @typedef {import('$lib/types.js').Meta} Meta */
   /** @typedef {{ value: string, label: string, color?: string }} Option */
@@ -88,28 +89,16 @@
   {/if}
 
   {#if view === 'simple'}
-    <div class="flex items-center gap-1 text-xs text-ink-faint">
+    <div class="flex items-center gap-1.5 text-xs text-ink-faint">
       <span class="hidden sm:inline">まとめ方</span>
-      <div class="flex rounded-pill border border-line bg-surface p-0.5">
-        <button
-          type="button"
-          onclick={() => (groupBy = 'status')}
-          class="rounded-pill px-2.5 py-1 transition-colors {groupBy === 'status'
-            ? 'bg-accent text-on-accent'
-            : 'text-ink-soft hover:text-ink'}"
-        >
-          状況
-        </button>
-        <button
-          type="button"
-          onclick={() => (groupBy = 'category')}
-          class="rounded-pill px-2.5 py-1 transition-colors {groupBy === 'category'
-            ? 'bg-accent text-on-accent'
-            : 'text-ink-soft hover:text-ink'}"
-        >
-          テーマ
-        </button>
-      </div>
+      <SegmentedTabs
+        bind:value={groupBy}
+        options={[
+          { value: 'status', label: '状況' },
+          { value: 'category', label: 'テーマ' }
+        ]}
+        ariaLabel="まとめ方"
+      />
     </div>
   {/if}
 
