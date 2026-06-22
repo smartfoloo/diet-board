@@ -1,6 +1,5 @@
 <script>
   import ThemeToggle from '$lib/components/ThemeToggle.svelte';
-  import TranslateMenu from '$lib/components/TranslateMenu.svelte';
   import SegmentedTabs from '$lib/components/SegmentedTabs.svelte';
 
   /** @typedef {import('$lib/types.js').Meta} Meta */
@@ -41,11 +40,10 @@
     <SegmentedTabs bind:value={view} options={viewTabs} ariaLabel="表示切り替え" />
 
     <div class="ml-auto flex items-center gap-2 sm:gap-2.5">
-      <span class="hidden text-xs text-ink-faint tabular-nums notranslate sm:inline">
+      <span class="hidden text-xs text-ink-faint tabular-nums sm:inline">
         {shown} / {total} 件
       </span>
       <span class="hidden h-5 w-px bg-line sm:block" aria-hidden="true"></span>
-      <TranslateMenu />
       <ThemeToggle />
     </div>
   </div>
