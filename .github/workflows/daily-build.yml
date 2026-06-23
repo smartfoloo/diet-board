@@ -60,7 +60,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/content data/ai.json
-          git diff --quiet --cached || git commit -m "chore: refresh bill data $(date -u +%F)"
+          if [ "${{ github.event_name }}" = "push" ]; then
+            MSG="chore: refresh bill data on push $(date -u +%F)"
+          else
+            MSG="chore: refresh bill data $(date -u +%F)"
+          fi
+          git diff --quiet --cached || git commit -m "$MSG"
           git push || true
 
       - uses: actions/configure-pages@v5
