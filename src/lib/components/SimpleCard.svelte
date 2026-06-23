@@ -20,7 +20,6 @@
 
   // Prefer the AI plain-language title; fall back to the official text.
   const title = $derived(bill.ai?.plainTitle ?? bill.title);
-  const showOfficial = $derived(!!bill.ai?.plainTitle && bill.ai.plainTitle !== bill.title);
 </script>
 
 <button
@@ -41,14 +40,7 @@
     </span>
   </div>
 
-  <div>
-    <h3 class="text-[15px] font-bold leading-snug text-ink [overflow-wrap:anywhere]">
-      {title}
-    </h3>
-    {#if showOfficial}
-      <p class="mt-1 text-[11px] text-ink-faint [overflow-wrap:anywhere] line-clamp-1">
-        {bill.title}
-      </p>
-    {/if}
-  </div>
+  <h3 class="text-[15px] font-bold leading-snug text-ink [overflow-wrap:anywhere]">
+    {title}
+  </h3>
 </button>

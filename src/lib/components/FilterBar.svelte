@@ -7,7 +7,7 @@
   /**
    * @type {{
    *   meta: Meta,
-   *   view: 'simple' | 'board' | 'recent',
+   *   view: 'digest' | 'simple' | 'board' | 'recent',
    *   total: number,
    *   shown: number
    * }}
@@ -15,7 +15,8 @@
   let { meta, view = $bindable(), total, shown } = $props();
 
   const viewTabs = [
-    { value: 'simple', label: 'まとめ' },
+    { value: 'digest', label: 'ダイジェスト' },
+    { value: 'simple', label: '一覧' },
     { value: 'board', label: 'ボード' },
     { value: 'recent', label: '動き' }
   ];

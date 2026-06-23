@@ -1,10 +1,12 @@
 <script>
   import { browser } from '$app/environment';
   import { COLUMNS } from '$lib/types';
+  import { matchesQuery } from '$lib/search';
   import FilterBar from '$lib/components/FilterBar.svelte';
   import FilterMenu from '$lib/components/FilterMenu.svelte';
   import Column from '$lib/components/Column.svelte';
   import Feed from '$lib/components/Feed.svelte';
+  import Digest from '$lib/components/Digest.svelte';
   import ActivityFeed from '$lib/components/ActivityFeed.svelte';
   import StatsHeader from '$lib/components/StatsHeader.svelte';
   import BillDetail from '$lib/components/BillDetail.svelte';
@@ -25,9 +27,15 @@
     stage: sp.get('stage') ?? '',
     q: sp.get('q') ?? ''
   });
-  /** @type {'simple' | 'board' | 'recent'} */
+  /** @type {'digest' | 'simple' | 'board' | 'recent'} */
   let view = $state(
-    sp.get('view') === 'board' ? 'board' : sp.get('view') === 'recent' ? 'recent' : 'simple'
+    sp.get('view') === 'board'
+      ? 'board'
+      : sp.get('view') === 'recent'
+        ? 'recent'
+        : sp.get('view') === 'list'
+          ? 'simple'
+          : 'digest'
   );
   /** @type {'status' | 'category'} */
   let groupBy = $state(sp.get('group') === 'category' ? 'category' : 'status');
@@ -56,7 +64,7 @@
             : b.stage === filters.stage;
         if (!inCol) return false;
       }
-      if (filters.q && !b.title.includes(filters.q)) return false;
+      if (filters.q && !matchesQuery(b, filters.q)) return false;
       return true;
     })
   );
@@ -82,6 +90,17 @@
     selectedId = null;
   }
 
+  /**
+   * Follow a digest section's "すべて見る →" (or a theme chip) into the matching view.
+   * @param {{ view: 'simple' | 'board' | 'recent', group?: 'status' | 'category', category?: string }} s
+   */
+  function seeAll(s) {
+    view = s.view;
+    if (s.group) groupBy = s.group;
+    filters.category = s.category ?? '';
+    if (browser) window.scrollTo({ top: 0 });
+  }
+
   // --- keep URL in sync (shareable views) --------------------------------
   $effect(() => {
     if (!browser) return;
@@ -92,7 +111,7 @@
     set('category', filters.category);
     set('stage', filters.stage);
     set('q', filters.q);
-    set('view', view === 'simple' ? '' : view);
+    set('view', view === 'digest' ? '' : view === 'simple' ? 'list' : view);
     set('group', groupBy === 'category' ? 'category' : '');
     set('bill', selectedId ?? '');
     if (u.href !== window.location.href) history.replaceState(history.state, '', u);
@@ -105,7 +124,17 @@
 
 <FilterBar {meta} bind:view total={bills.length} shown={filtered.length} />
 
-{#if view === 'simple'}
+{#if view === 'digest'}
+  <!-- Full-width hero -->
+  <div class="pt-[calc(56px+1.5rem)] px-4 sm:px-6 lg:px-8">
+    <StatsHeader bills={bills} {meta} />
+  </div>
+
+  <!-- Curated digest -->
+  <main class="mx-auto max-w-[1100px] px-4 pb-6 mt-10">
+    <Digest {bills} {meta} asOf={meta.updatedAt} onselect={select} onseeall={seeAll} />
+  </main>
+{:else if view === 'simple'}
   <!-- Full-width hero -->
   <div class="pt-[calc(56px+1.5rem)] px-4 sm:px-6 lg:px-8">
     <StatsHeader bills={bills} {meta} />

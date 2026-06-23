@@ -2,6 +2,7 @@
   import { COLUMNS } from '$lib/types';
   import Dropdown from './Dropdown.svelte';
   import SegmentedTabs from './SegmentedTabs.svelte';
+  import CategoryChips from './CategoryChips.svelte';
 
   /** @typedef {import('$lib/types.js').Meta} Meta */
   /** @typedef {{ value: string, label: string, color?: string }} Option */
@@ -45,9 +46,8 @@
   const dirty = $derived(!!(filters.party || filters.category || filters.stage || filters.q));
 </script>
 
-<div
-  class="mb-8 flex flex-wrap items-center gap-2 rounded-card border border-line bg-surface px-4 py-3 shadow-card"
->
+<div class="mb-8 space-y-3">
+<div class="flex flex-wrap items-center gap-2">
   <!-- Search -->
   <div class="relative">
     <svg
@@ -67,12 +67,15 @@
     />
   </div>
 
-  <Dropdown
-    bind:value={filters.category}
-    options={categoryOptions}
-    placeholder="すべてのテーマ"
-    label="テーマ"
-  />
+  <!-- On the 一覧 view, themes are chosen via the chip row below (more discoverable). -->
+  {#if view !== 'simple'}
+    <Dropdown
+      bind:value={filters.category}
+      options={categoryOptions}
+      placeholder="すべてのテーマ"
+      label="テーマ"
+    />
+  {/if}
   <Dropdown
     bind:value={filters.party}
     options={partyOptions}
@@ -110,5 +113,10 @@
     >
       クリア ✕
     </button>
+  {/if}
+</div>
+
+  {#if view === 'simple'}
+    <CategoryChips bind:value={filters.category} categories={meta.categories} />
   {/if}
 </div>
