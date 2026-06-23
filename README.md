@@ -1,4 +1,4 @@
-# 国会ビジュアライザー — Diet Bill Tracker
+# 国会ボード
 
 A Kanban-style board that shows what's moving through the Japanese Diet (国会) **right
 now**. Columns are legislative stages (提出 → 委員会審議 → 本会議 → 参議院 → 成立・廃案);

@@ -119,7 +119,7 @@
 </script>
 
 <svelte:head>
-  <title>国会ビジュアライザー — 第{meta.session}回国会</title>
+  <title>国会ボード</title>
 </svelte:head>
 
 <FilterBar {meta} bind:view total={bills.length} shown={filtered.length} />

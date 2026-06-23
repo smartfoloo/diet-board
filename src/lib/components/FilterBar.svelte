@@ -29,7 +29,7 @@
   >
     <!-- Brand -->
     <div class="hidden items-baseline gap-2 sm:flex">
-      <span class="text-sm font-bold tracking-tight text-ink">国会ビジュアライザー</span>
+      <span class="text-sm font-bold tracking-tight text-ink">国会ボード</span>
       <span class="rounded-pill bg-accent-soft px-2 py-0.5 text-[11px] font-medium text-accent-deep">
         第{meta.session}回国会
       </span>
