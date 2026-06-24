@@ -1,7 +1,7 @@
 <script>
   import { buildDigest } from '$lib/digest';
   import { simpleStatus } from '$lib/status';
-  import { partyColor, partyLabel } from '$lib/parties';
+  import { partyLabel } from '$lib/parties';
   import { boldSegments } from '$lib/richtext';
   import SimpleCard from './SimpleCard.svelte';
 
@@ -42,10 +42,7 @@
         class="flex w-full flex-col gap-3 rounded-card border border-line bg-surface p-5 text-left shadow-card transition-colors hover:border-line-strong hover:bg-surface-2 sm:p-6"
       >
         <span class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-ink-faint">
-          <span class="flex items-center gap-1.5">
-            <span class="h-2 w-2 rounded-full" style="background:{partyColor(f.submitterParty)}"></span>
-            {partyLabel(f.submitterParty)}
-          </span>
+          {partyLabel(f.submitterParty)}
           <span class="text-ink-faint/50">·</span>
           {f.category}
           {#if heroStatus}

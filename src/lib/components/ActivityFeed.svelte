@@ -1,19 +1,15 @@
 <script>
   import { browser } from '$app/environment';
   import { recentActivity, formatDay } from '$lib/activity';
-  import { partyColor, partyLabel } from '$lib/parties';
+  import { partyLabel } from '$lib/parties';
 
   /** @typedef {import('$lib/types.js').Bill} Bill */
   /** @typedef {import('$lib/types.js').Meta} Meta */
-  /** @typedef {import('$lib/status.js').Tone} Tone */
 
   /** @type {{ bills: Bill[], meta: Meta, onselect: (b: Bill, rect: DOMRect) => void }} */
   let { bills, meta, onselect } = $props();
 
   const days = $derived(recentActivity(bills, meta.updatedAt));
-
-  /** @type {Record<Tone, string>} */
-  const dot = { new: '#a1a1aa', active: '#0d9488', done: '#16a34a', failed: '#71717a' };
 
   // Highlight events newer than the user's last visit, then record this visit.
   const LAST_SEEN_KEY = 'kokkai:lastSeen';
@@ -60,11 +56,6 @@
             onclick={(ev) => onselect(e.bill, ev.currentTarget.getBoundingClientRect())}
             class="flex w-full items-start gap-3 rounded-card border border-line bg-surface p-3.5 text-left shadow-card transition-colors hover:border-line-strong hover:bg-surface-2 sm:p-4"
           >
-            <span
-              class="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full"
-              style="background:{dot[e.tone]}"
-            ></span>
-
             <span class="min-w-0 flex-1">
               <span class="flex flex-wrap items-center gap-x-2 gap-y-1">
                 <span class="rounded-badge bg-surface-2 px-2 py-0.5 text-xs font-medium text-ink-soft">
@@ -87,10 +78,6 @@
               </span>
 
               <span class="mt-1 flex items-center gap-1.5 text-xs text-ink-faint">
-                <span
-                  class="h-2 w-2 shrink-0 rounded-full"
-                  style="background:{partyColor(e.bill.submitterParty)}"
-                ></span>
                 {partyLabel(e.bill.submitterParty)} · {e.bill.category}
               </span>
             </span>

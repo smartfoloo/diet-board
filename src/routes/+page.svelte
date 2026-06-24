@@ -2,8 +2,11 @@
   import { browser } from '$app/environment';
   import { COLUMNS } from '$lib/types';
   import { matchesQuery } from '$lib/search';
+  import { sortBills, asSortKey } from '$lib/sort';
   import FilterBar from '$lib/components/FilterBar.svelte';
   import FilterMenu from '$lib/components/FilterMenu.svelte';
+  import FilterPopup from '$lib/components/FilterPopup.svelte';
+  import SearchBox from '$lib/components/SearchBox.svelte';
   import Column from '$lib/components/Column.svelte';
   import Feed from '$lib/components/Feed.svelte';
   import Digest from '$lib/components/Digest.svelte';
@@ -37,8 +40,8 @@
           ? 'simple'
           : 'digest'
   );
-  /** @type {'status' | 'category'} */
-  let groupBy = $state(sp.get('group') === 'category' ? 'category' : 'status');
+  /** @type {import('$lib/sort.js').SortKey} */
+  let sort = $state(asSortKey(sp.get('sort')));
 
   /** @type {string | null} */
   let selectedId = $state(sp.get('bill'));
@@ -69,6 +72,9 @@
     })
   );
 
+  // Sorted flat list for the 一覧 view.
+  const sorted = $derived(sortBills(filtered, sort));
+
   /**
    * @param {Stage} stage
    * @returns {Bill[]}
@@ -92,11 +98,11 @@
 
   /**
    * Follow a digest section's "すべて見る →" (or a theme chip) into the matching view.
-   * @param {{ view: 'simple' | 'board' | 'recent', group?: 'status' | 'category', category?: string }} s
+   * @param {import('$lib/digest.js').SeeAll & { category?: string }} s
    */
   function seeAll(s) {
     view = s.view;
-    if (s.group) groupBy = s.group;
+    if (s.sort) sort = s.sort;
     filters.category = s.category ?? '';
     if (browser) window.scrollTo({ top: 0 });
   }
@@ -112,7 +118,7 @@
     set('stage', filters.stage);
     set('q', filters.q);
     set('view', view === 'digest' ? '' : view === 'simple' ? 'list' : view);
-    set('group', groupBy === 'category' ? 'category' : '');
+    set('sort', sort === 'newest' ? '' : sort);
     set('bill', selectedId ?? '');
     if (u.href !== window.location.href) history.replaceState(history.state, '', u);
   });
@@ -137,8 +143,14 @@
 {:else if view === 'simple'}
   <!-- Constrained bills section (no hero — kept to ダイジェスト only) -->
   <main class="mx-auto max-w-[1100px] px-4 pb-6 pt-[calc(56px+1.5rem)]">
-    <FilterMenu {meta} bind:filters {view} bind:groupBy {visibleParties} />
-    <Feed bills={filtered} {meta} {groupBy} onselect={select} />
+    <!-- Search stays out in the open; sort + filters live in the popup. -->
+    <div class="mb-8 flex items-center gap-2">
+      <SearchBox bind:value={filters.q} class="w-44 sm:w-56" />
+      <div class="ml-auto">
+        <FilterPopup {meta} bind:filters bind:sort {visibleParties} />
+      </div>
+    </div>
+    <Feed bills={sorted} onselect={select} />
   </main>
 {:else if view === 'recent'}
   <main class="mx-auto max-w-[1100px] px-4 pb-6 pt-[calc(56px+1.5rem)]">
@@ -146,7 +158,7 @@
   </main>
 {:else}
   <main class="mx-auto max-w-[1600px] px-4 pb-4 pt-[calc(56px+1rem)]">
-    <FilterMenu {meta} bind:filters {view} bind:groupBy {visibleParties} />
+    <FilterMenu {meta} bind:filters {visibleParties} />
     <div class="flex gap-3 overflow-x-auto pb-4" style="height: calc(100vh - 180px)">
       {#each COLUMNS as col (col.id)}
         <Column

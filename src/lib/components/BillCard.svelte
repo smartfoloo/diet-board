@@ -40,7 +40,6 @@
 
   <div class="flex items-center justify-between gap-2 text-[11px] text-ink-faint">
     <span class="flex min-w-0 items-center gap-1.5">
-      <span class="h-2 w-2 shrink-0 rounded-full" style="background:{partyHue}"></span>
       <span class="truncate" style="color:{partyHue}">{partyLabel(bill.submitterParty)}</span>
     </span>
     {#if finalLabel}

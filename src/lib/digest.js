@@ -10,7 +10,7 @@ import { recentActivity } from './activity.js';
  * Where a section's "すべて見る →" link should take the viewer.
  * @typedef {object} SeeAll
  * @property {'simple' | 'board' | 'recent'} view
- * @property {'status' | 'category'} [group] grouping to apply on the 一覧 (simple) feed
+ * @property {import('./sort.js').SortKey} [sort] sort order to apply on the 一覧 (simple) feed
  */
 
 /**
@@ -29,17 +29,6 @@ import { recentActivity } from './activity.js';
  */
 
 const PER_SECTION = 5;
-
-/** Active = still being deliberated (not yet enacted or shelved). */
-const ACTIVE_STAGES = new Set(['提出', '委員会審議', '本会議', '参議院']);
-
-/**
- * @param {Bill} b
- * @returns {boolean}
- */
-function isActive(b) {
-  return !b.finalState && ACTIVE_STAGES.has(b.stage);
-}
 
 /**
  * Most recent dated timeline event ('' when none), for ordering enacted bills.
@@ -82,20 +71,6 @@ function recentlyMoved(bills, asOf) {
  * @returns {Digest}
  */
 export function buildDigest(bills, asOf) {
-  const active = bills.filter(isActive);
-
-  // §2 ordering: 参議院 (further along) before 本会議, then longest-stuck first.
-  const stageRank = /** @type {Record<string, number>} */ ({ 参議院: 0, 本会議: 1 });
-  const nearing = active
-    .filter((b) => b.stage === '参議院' || b.stage === '本会議')
-    .sort((a, b) => stageRank[a.stage] - stageRank[b.stage] || (b.daysInStage ?? 0) - (a.daysInStage ?? 0));
-
-  // §3 ordering: hot before warm, then longest-stuck first.
-  const heatRank = /** @type {Record<string, number>} */ ({ hot: 0, warm: 1 });
-  const stuck = active
-    .filter((b) => b.heat === 'hot' || b.heat === 'warm')
-    .sort((a, b) => heatRank[a.heat] - heatRank[b.heat] || (b.daysInStage ?? 0) - (a.daysInStage ?? 0));
-
   const enacted = bills
     .filter((b) => b.finalState === '成立' || b.stage === '成立')
     .sort((a, b) => latestDate(b).localeCompare(latestDate(a)));
@@ -110,24 +85,10 @@ export function buildDigest(bills, asOf) {
       source: recentlyMoved(bills, asOf)
     },
     {
-      key: 'nearing',
-      heading: 'もうすぐ成立へ',
-      blurb: '採決が近い、終盤の段階にある法案。',
-      seeAll: { view: 'simple', group: 'status' },
-      source: nearing
-    },
-    {
-      key: 'stuck',
-      heading: '議論が長引く法案',
-      blurb: '同じ段階に長くとどまっている法案。',
-      seeAll: { view: 'simple', group: 'status' },
-      source: stuck
-    },
-    {
       key: 'enacted',
-      heading: '成立したばかり',
-      blurb: '今国会で可決され、法律になったもの。',
-      seeAll: { view: 'simple', group: 'status' },
+      heading: '成立した法案',
+      blurb: '今国会で可決され、法律になった法案。',
+      seeAll: { view: 'simple', sort: 'newest' },
       source: enacted
     }
   ];
